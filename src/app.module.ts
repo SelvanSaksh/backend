@@ -6,7 +6,9 @@ import { UserModule } from './user/user.module';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { join } from 'path';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-
+import { StoreModule } from './Stores/store.module';
+import { SurveyModule } from './survey/survey.module';
+import { AuditModule } from './audit/audit.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -31,11 +33,13 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_DATABASE'),
         entities: [join(__dirname, '**/*.entity{.ts,.js}')],
-        synchronize: true,
+        synchronize: false,
+        autoLoadEntities: true,
+        logging: true,
       }),
       inject: [ConfigService],
     }),
-    AuthModule, UserModule],
+      AuthModule, UserModule, StoreModule , SurveyModule , AuditModule],
   controllers: [AppController],
   providers: [AppService],
 })

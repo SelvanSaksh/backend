@@ -4,7 +4,7 @@ import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { TokensDto } from './dto/tokens.dto';
 import { GetUser } from './decorators/get-user.decorator';
-import { User } from '../user/entities/user.entity';
+import { AdminUser } from '../user/entities/user.entity';
 import { RefreshTokenGuard } from './guards/refresh-token.guard';
 
 @Controller('auth')
@@ -20,7 +20,7 @@ export class AuthController {
     @Post('refresh')
     @UseGuards(RefreshTokenGuard)
     @HttpCode(HttpStatus.OK)
-    refreshTokens(@GetUser() user: User): Promise<TokensDto> {
+    refreshTokens(@GetUser() user: AdminUser): Promise<TokensDto> {
         return this.authService.refreshTokens(user);
     }
 
