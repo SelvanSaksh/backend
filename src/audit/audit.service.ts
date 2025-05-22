@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { survey_store_report } from "./entities/survey_store_report.entity";
+import { survey_store_report } from "../survey/entities/survey_store_report.entity";
 import { CreateAuditAreaDto } from "./dto/create.auditArea.dto";
 import { AuditAreas } from "./entities/AuditAreas.entity";
 import { AuditQuestions } from "./entities/AuditQuestions.entity";

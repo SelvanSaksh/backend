@@ -33,45 +33,29 @@ export class SurveyService {
 
     // Get survey details 
     async getSurveyDetails(id: number): Promise<SurveyQuery[]> {
-  
-        // Get survey queries with audit area and audit question  
-        
         const surveyQuery = await this.surveyQueryRepository
-        .createQueryBuilder('surveyQuery')
-        .leftJoin('surveyQuery.auditArea', 'auditArea')
-        .leftJoin('surveyQuery.auditQuestion', 'auditQuestion')
-        .leftJoin('surveyQuery.survey', 'survey')
-        .select([
-          // Main table fields
-          'surveyQuery.id',
-          'surveyQuery.survey_id',
-          'surveyQuery.survey_query',
-        
-      
-          // auditArea fields
-          'auditArea.id',
-          'auditArea.area_name',
-      
-          // auditQuestion fields
-          'auditQuestion.question_id',
-      
-          // survey fields
-          'survey.id',
-          'survey.survey_name',
-          'survey.status',
-        ])
-        .where('surveyQuery.survey_id = :id', { id })
-        .andWhere('survey.status = :status', { status: 'Active' })
-        .getMany();
-      
-        
-        // const surveyQuery = await this.surveyQueryRepository.find({ where: { survey_id: id, survey: { status: 'Active' } }, relations: ['auditArea', 'auditQuestion', 'survey'] });
+            .createQueryBuilder('surveyQuery')
+            .leftJoin('surveyQuery.auditArea', 'auditArea')
+            .leftJoin('surveyQuery.auditQuestion', 'auditQuestion')
+            .leftJoin('surveyQuery.survey', 'survey')
+            .select([
+                'surveyQuery.id',
+                'surveyQuery.survey_id',
+                'surveyQuery.survey_query',
+                'auditArea.id',
+                'auditArea.area_name',
+                'auditQuestion.question_id',
+                'survey.id',
+                'survey.survey_name',
+                'survey.status',
+            ])
+            .where('surveyQuery.survey_id = :id', { id })
+            .andWhere('survey.status = :status', { status: 'Active' })
+            .getMany();
+
         if (!surveyQuery) {
             throw new NotFoundException('Survey queries not found');
         }
-
-       
-
         return surveyQuery;
     }
 

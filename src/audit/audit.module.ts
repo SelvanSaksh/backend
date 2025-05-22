@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { survey_store_report } from "./entities/survey_store_report.entity";
+import { survey_store_report } from "../survey/entities/survey_store_report.entity";
 import { AuditController } from "./audit.controller";
 import { AuditService } from "./audit.service";     
 import { AuditAreas } from "./entities/AuditAreas.entity";
