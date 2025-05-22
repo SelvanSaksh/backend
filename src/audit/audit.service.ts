@@ -71,14 +71,20 @@ export class AuditService {
 
 
     async getAuditQuestionList(area_id: number): Promise<SurveyQuery[]> {
-        const listOfQuestions = await this.surveyQueryRepository.find({ where: { area: area_id } })
+        const listOfQuestions = await this.surveyQueryRepository
+        .createQueryBuilder('survey_query')
+        .leftJoin('audit_areas', 'a', 'a.id = survey_query.area')
+        .leftJoin('audit_questions', 'aq', 'aq.question_id = survey_query.audit_question_id')
+        .where('survey_query.area = :area_id', { area_id })
+        .select(['survey_query.id as survey_query_id', 'survey_query.survey_query as question', 'aq.option_types as option_types', 'survey_query.type as type', 'survey_query.mandatory as mandatory', 'survey_query.yes_image as yes_image', 'survey_query.no_image as no_image',
+             'a.area_name as area_name'])
+        .getRawMany<SurveyQuery>();
+     
         if (listOfQuestions.length === 0) {
             throw new NotFoundException('No questions found for this area');
         }
 
         return listOfQuestions;
-
-
     }
 
 
