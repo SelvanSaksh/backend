@@ -9,6 +9,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { StoreModule } from './Stores/store.module';
 import { SurveyModule } from './survey/survey.module';
 import { AuditModule } from './audit/audit.module';
+import { UserTrackingModule } from './user_tracking/userTracking.module';
+  
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -39,7 +41,7 @@ import { AuditModule } from './audit/audit.module';
       }),
       inject: [ConfigService],
     }),
-      AuthModule, UserModule, StoreModule , SurveyModule , AuditModule],
+      AuthModule, UserModule, StoreModule , SurveyModule , AuditModule , UserTrackingModule],
   controllers: [AppController],
   providers: [AppService],
 })

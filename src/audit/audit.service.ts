@@ -50,22 +50,23 @@ export class AuditService {
     }
 
     // get all the servey Questions list with areas 
-    async getAllSurveyQuestionsList(survey_id:number):Promise<SurveyQuery[]>{
+    async getAllSurveyQuestionsList(survey_id: number): Promise<SurveyQuery[]> {
         const listofSurveyQuestions = await this.surveyQueryRepository
-        .createQueryBuilder('survey_query')
-        .innerJoin('audit_areas', 'a', 'a.id = survey_query.area')
-        .innerJoin('survey', 's', 's.id = survey_query.survey_id')
-        .where('survey_query.survey_id = :survey_id', { survey_id })
-        .select(['survey_query.id as survey_query_id', 'survey_query.survey_query as question', 'survey_query.type as type', 'survey_query.mandatory as mandatory' , 'a.area_name as area_name', 's.survey_name as survey_name'])
-        .getRawMany<SurveyQuery>();
+            .createQueryBuilder('survey_query')
+            .innerJoin('audit_areas', 'a', 'a.id = survey_query.area')
+            .innerJoin('survey', 's', 's.id = survey_query.survey_id')
+            .innerJoin('audit_questions', 'aq', 'aq.question_id = survey_query.audit_question_id')
+            .where('survey_query.survey_id = :survey_id', { survey_id })
+            .orderBy('survey_query.id', 'ASC')
+            .select(['survey_query.id as survey_query_id', 'survey_query.survey_query as question', 'aq.option_types as option_types', 'survey_query.type as type', 'survey_query.mandatory as mandatory', 'survey_query.yes_image as yes_image', 'survey_query.no_image as no_image',
+                'survey_query.no_image as no_image', 'a.area_name as area_name', 's.survey_name as survey_name'])
+            .getRawMany<SurveyQuery>();
+        
 
-        if(listofSurveyQuestions.length === 0){
+        if (listofSurveyQuestions.length === 0) {
             throw new NotFoundException('No questions found for this survey');
         }
-
         return listofSurveyQuestions;
-        
-        
     }
 
 
