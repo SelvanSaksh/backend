@@ -59,7 +59,7 @@ export class AuditService {
             .where('survey_query.survey_id = :survey_id', { survey_id })
             .orderBy('survey_query.id', 'ASC')
             .select(['survey_query.id as survey_query_id', 'survey_query.survey_query as question', 'aq.option_types as option_types', 'survey_query.type as type', 'survey_query.mandatory as mandatory', 'survey_query.yes_image as yes_image', 'survey_query.no_image as no_image',
-                'survey_query.no_image as no_image', 'a.area_name as area_name', 's.survey_name as survey_name'])
+                'survey_query.no_image as no_image', 'survey_query.area as area_id' , 'a.area_name as area_name', 's.survey_name as survey_name'])
             .getRawMany<SurveyQuery>();
         
 
