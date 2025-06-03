@@ -1,174 +1,166 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany, Unique } from 'typeorm';
-import { UserSurvey } from './UserSurvey.entity';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  JoinColumn,
+  OneToMany,
+} from 'typeorm';
 import { UserStore } from 'src/user/entities/UserStore.entity';
+
 @Entity('retailers')
 export class Retailers {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    // Retailer Info
-    @Column({ nullable: true })
-    retailer: string;
+  @Column({ nullable: true })
+  retailer: string;
 
-    @Column({ unique: true, nullable: true })
-    outlet_code: string;
+  @Column({ nullable: true, unique: true })
+  outlet_code: string;
 
-    @Column({ nullable: true })
-    area: string;
+  @Column({ nullable: true })
+  area: string;
 
+  @Column({ nullable: true })
+  site_status: string;
 
-    @Column({ nullable: true })
-    site_status: string;
+  @Column({ nullable: true })
+  comp_type: string;
 
-    @Column({ nullable: true })
-    comp_type: string;
+  @Column({ nullable: true })
+  type: string;
 
-    @Column({ nullable: true })
-    type: string;
+  @Column({type:'text', nullable: true })
+  parent_retailer: string;
 
-    @Column({ nullable: true })
-    parent_retailer: number;
+//   @ManyToOne(() => Retailers, (retailer) => retailer.children, { nullable: true })
+//   @JoinColumn({ name: 'parent_retailer' })
+//   parent: Retailers;
 
+//   @OneToMany(() => Retailers, (retailer) => retailer.parent)
+//   children: Retailers[];
 
-    // self referencing 
-    @ManyToOne(() => Retailers, (retailer) => retailer.id, { nullable: true })
-    @JoinColumn({ name: 'parent_retailer' })
-    parent: Retailers;
+  @Column({ type: 'text', nullable: true })
+  address: string;
 
-    @OneToMany(() => Retailers, (retailer) => retailer.parent)
-    children: Retailers[];
+  @Column({ nullable: true })
+  state: string;
 
-    // Address
-    @Column({ type: 'text', nullable: true })
-    address: string;
+  @Column({ nullable: true })
+  city: string;
 
-    @Column({ nullable: true })
-    state: string;
+  @Column({ nullable: true })
+  cluster: string;
 
-    @Column({ nullable: true })
-    city: string;
+  @Column({ nullable: true })
+  region: string;
 
-    @Column({ nullable: true })
-    cluster: string;
+  @Column({ nullable: true })
+  country_code: string;
 
-    @Column({ nullable: true })
-    region: string;
+  @Column({ nullable: true })
+  logo: string;
 
-    @Column({ nullable: true })
-    country_code: string;
+  @Column({ nullable: true })
+  qr_logo: string;
 
-    // Media/Logos
-    @Column({ nullable: true })
-    logo: string;
+  @Column({ type: 'decimal', precision: 10, scale: 6, nullable: true })
+  latitude: number;
 
-    @Column({ nullable: true })
-    qr_logo: string;
+  @Column({ type: 'decimal', precision: 10, scale: 6, nullable: true })
+  longitude: number;
 
-    // Geo Location
-    @Column({ type: 'decimal', precision: 10, scale: 6, nullable: true })
-    latitude: number;
+  @Column({ type: 'text', nullable: true })
+  is_timer: string;
 
-    @Column({ type: 'decimal', precision: 10, scale: 6, nullable: true })
-    longitude: number;
+  @Column({ nullable: true })
+  secret_key: number;
 
+  @Column({ default: false })
+  auto_email_report: boolean;
 
-    @Column({ type: 'text', nullable: true })
-    is_timer: number;
+  @Column({ default: false })
+  auto_sms_report: boolean;
 
-    @Column({ nullable: true })
-    secret_key: number;
+  @Column({ default: false })
+  auto_whatsapp_report: boolean;
 
-    // Auto Reporting Config
-    @Column({ default: false })
-    auto_email_report: boolean;
+  @Column({ type: 'text', nullable: true })
+  email_recepients: string;
 
-    @Column({ default: false })
-    auto_sms_report: boolean;
+  @Column({ type: 'text', nullable: true })
+  mobile_distirbution_list: string;
 
-    @Column({ default: false })
-    auto_whatsapp_report: boolean;
+  @Column({ type: 'text', nullable: true })
+  whatsapp_recipients: string;
 
-    @Column({ type: 'text', nullable: true })
-    email_recepients: string;
+  @Column({ default: false })
+  yes_image_reqd: boolean;
 
-    @Column({ type: 'text', nullable: true })
-    mobile_distirbution_list: string;
+  @Column({ default: false })
+  no_image_reqd: boolean;
 
-    @Column({ type: 'text', nullable: true })
-    whatsapp_recipients: string;
+  @Column({ nullable: true })
+  size_in_sft: number;
 
-    @Column({ default: false })
-    final_report_sms: boolean;
+  @Column({ nullable: true })
+  no_of_employees: number;
 
-    @Column({ default: false })
-    final_report_whatsapp: boolean;
+  @Column({ type: 'decimal', precision: 12, scale: 2, nullable: true })
+  monthly_rent: number;
 
-    @Column({ default: false })
-    final_report_email: boolean;
+  @Column({ nullable: true })
+  scaling_type: string;
 
-    // Compliance Requirements
-    @Column({ default: false })
-    yes_image_reqd: boolean;
+  @Column({ nullable: true })
+  controller_id: string;
 
-    @Column({ default: false })
-    no_image_reqd: boolean;
+  @Column({ nullable: true })
+  wifi_user_name: string;
 
-    @Column({ default: false })
-    create_actions_auto_for_nc: boolean;
+  @Column({ nullable: true })
+  wifi_password: string;
 
-    // Site and Operational Info
-    @Column({ nullable: true })
-    size_in_sft: number;
+  @Column({ default: false })
+  final_report_sms: boolean;
 
-    @Column({ nullable: true })
-    no_of_employees: number;
+  @Column({ default: false })
+  final_report_whatsapp: boolean;
 
-    @Column({ type: 'decimal', precision: 12, scale: 2, nullable: true })
-    monthly_rent: number;
+  @Column({ default: false })
+  final_report_email: boolean;
 
-    @Column({ nullable: true })
-    scaling_type: string;
+  @Column({ type: 'text', nullable: true })
+  action_approver_users: string;
 
-    @Column({ nullable: true })
-    controller_id: string;
+  @Column({ nullable: true })
+  site_manager: string;
 
-    @Column({ nullable: true })
-    wifi_user_name: string;
+  @Column({ type: 'date', nullable: true })
+  creation_date: Date;
 
-    @Column({ nullable: true })
-    wifi_password: string;
+  @Column({ type: 'date', nullable: true })
+  site_open_date: Date;
 
-    @Column({ nullable: true })
-    display_size_sqft: number;
+  @Column({ nullable: true })
+  city_type: string;
 
-    @Column({ nullable: true })
-    avg_sku: number;
+  @Column({ nullable: true })
+  display_size_sqft: number;
 
-    // User Assignments
-    @Column({ type: 'text', nullable: true })
-    action_approver_users: string;
+  @Column({ nullable: true })
+  avg_sku: number;
 
-    @Column({ nullable: true })
-    site_manager: string;
+  @Column({ default: false })
+  create_actions_auto_for_nc: boolean;
 
-    // Dates
-    @Column({ type: 'date', nullable: true })
-    creation_date: Date;
+  @Column({ nullable: true })
+  region_location: string;
 
-    @Column({ type: 'date', nullable: true })
-    site_open_date: Date;
+  @Column({ nullable: true })
+  work_permit_qr_img: string;
 
-    // Location Classification
-    @Column({ nullable: true })
-    city_type: string;
-
-    @Column({ nullable: true })
-    region_location: string;
-
-    @Column({ nullable: true })
-    work_permit_qr_img: string;
-
-    // Relation to UserStore
-    @OneToMany(() => UserStore, (userStore) => userStore.store)
-    userStores: UserStore[];
+  @OneToMany(() => UserStore, (userStore) => userStore.store,{ nullable: true })
+  userStores: UserStore[];
 }
