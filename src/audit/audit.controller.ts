@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Param, UseInterceptors, UploadedFiles } from "@nestjs/common";
+import { Controller, Post, Body, Get, Param, UseInterceptors, UploadedFiles, HttpCode, HttpStatus } from "@nestjs/common";
 import { AuditService } from "./audit.service";
 import { CreateAuditQuestionsDto } from "./dto/create.auditQuestions.dto";
 import { CreateAuditAreaDto } from "./dto/create.auditArea.dto";
@@ -6,6 +6,7 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('audit')
 export class AuditController {
+    surveyResponseService: any;
 
     constructor(private readonly auditService: AuditService) { }
 
@@ -58,6 +59,16 @@ export class AuditController {
     async uploadImages(@UploadedFiles() files: Express.Multer.File[]) {
         const urls = await this.auditService.uploadMultiple(files);
         return { success: true, urls };
+    }
+
+    @Post("answer")
+    @HttpCode(HttpStatus.CREATED)
+    async create(@Body() createSurveyResponseDto: any) {
+        const surveyResponse = await this.auditService.createSurveyResponse(createSurveyResponseDto);
+        return {
+            message: 'Survey response created successfully',
+            data: surveyResponse,
+        };
     }
 
 }
