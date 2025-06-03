@@ -7,6 +7,7 @@ import { AuditAreas } from "./entities/AuditAreas.entity";
 import { AuditQuestions } from "./entities/AuditQuestions.entity";
 import { CreateAuditQuestionsDto } from "./dto/create.auditQuestions.dto";
 import { SurveyQuery } from "./entities/SurveyQuery.entity";
+import { CloudflareR2Service } from './cloudflare-r2.service.ts/cloudflare-r2.service.ts.service';
 
 @Injectable()
 export class AuditService {
@@ -19,7 +20,9 @@ export class AuditService {
         @InjectRepository(AuditQuestions)
         private auditQuestionsRepository: Repository<AuditQuestions>,
         @InjectRepository(SurveyQuery)
-        private surveyQueryRepository: Repository<SurveyQuery>
+        private surveyQueryRepository: Repository<SurveyQuery>,
+        private readonly cloudflareR2Service: CloudflareR2Service
+
     ) { }
 
 
@@ -59,9 +62,9 @@ export class AuditService {
             .where('survey_query.survey_id = :survey_id', { survey_id })
             .orderBy('survey_query.id', 'ASC')
             .select(['survey_query.id as survey_query_id', 'survey_query.survey_query as question', 'aq.option_types as option_types', 'survey_query.type as type', 'survey_query.mandatory as mandatory', 'survey_query.yes_image as yes_image', 'survey_query.no_image as no_image',
-                'survey_query.no_image as no_image', 'survey_query.area as area_id' , 'a.area_name as area_name', 's.survey_name as survey_name'])
+                'survey_query.no_image as no_image', 'survey_query.area as area_id', 'a.area_name as area_name', 's.survey_name as survey_name'])
             .getRawMany<SurveyQuery>();
-        
+
 
         if (listofSurveyQuestions.length === 0) {
             throw new NotFoundException('No questions found for this survey');
@@ -72,14 +75,14 @@ export class AuditService {
 
     async getAuditQuestionList(area_id: number): Promise<SurveyQuery[]> {
         const listOfQuestions = await this.surveyQueryRepository
-        .createQueryBuilder('survey_query')
-        .leftJoin('audit_areas', 'a', 'a.id = survey_query.area')
-        .leftJoin('audit_questions', 'aq', 'aq.question_id = survey_query.audit_question_id')
-        .where('survey_query.area = :area_id', { area_id })
-        .select(['survey_query.id as survey_query_id', 'survey_query.survey_query as question', 'aq.option_types as option_types', 'survey_query.type as type', 'survey_query.mandatory as mandatory', 'survey_query.yes_image as yes_image', 'survey_query.no_image as no_image',
-             'a.area_name as area_name'])
-        .getRawMany<SurveyQuery>();
-     
+            .createQueryBuilder('survey_query')
+            .leftJoin('audit_areas', 'a', 'a.id = survey_query.area')
+            .leftJoin('audit_questions', 'aq', 'aq.question_id = survey_query.audit_question_id')
+            .where('survey_query.area = :area_id', { area_id })
+            .select(['survey_query.id as survey_query_id', 'survey_query.survey_query as question', 'aq.option_types as option_types', 'survey_query.type as type', 'survey_query.mandatory as mandatory', 'survey_query.yes_image as yes_image', 'survey_query.no_image as no_image',
+                'a.area_name as area_name'])
+            .getRawMany<SurveyQuery>();
+
         if (listOfQuestions.length === 0) {
             throw new NotFoundException('No questions found for this area');
         }
@@ -89,4 +92,12 @@ export class AuditService {
 
 
 
+    async uploadMultiple(files: Express.Multer.File[]) {
+        const uploadedUrls: any = [];
+        for (const file of files) {
+            const key = `${Date.now()}-${file.originalname}`;
+            const url = await this.cloudflareR2Service.uploadFile(file.buffer, key, file.mimetype);
+            return url;
+        }
+    }
 }
