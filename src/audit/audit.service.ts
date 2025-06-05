@@ -27,6 +27,8 @@ export class AuditService {
         @InjectRepository(SurveyResponse)
         private surveyResponseRepository: Repository<SurveyResponse>,
         private readonly cloudflareR2Service: CloudflareR2Service,
+        @InjectRepository(Answer)
+        private answerRepository: Repository<Answer>,
     ) { }
 
     async createAuditArea(createAuditAreaDto: CreateAuditAreaDto): Promise<AuditAreas> {
@@ -119,12 +121,13 @@ export class AuditService {
 
     async createSurveyResponse(dto: any): Promise<SurveyResponse> {
         const { storeId, surveyId, userID, answeredData } = dto;
+
         let surveyResponse = await this.surveyResponseRepository.findOne({
             where: { storeId, surveyId, userID },
             relations: ['answers'],
         });
 
-        const answers = answeredData.map(answerDto => {
+        const newAnswers = answeredData.map(answerDto => {
             const answer = new Answer();
             answer.questionID = answerDto.questionID;
             answer.choosenValue = answerDto.choosenValue ?? '';
@@ -133,31 +136,19 @@ export class AuditService {
             answer.noteText = answerDto.noteText;
             return answer;
         });
+
         if (surveyResponse) {
-            surveyResponse.answers = answers;
+            await this.answerRepository.remove(surveyResponse.answers);
+
+            surveyResponse.answers = newAnswers;
         } else {
             surveyResponse = this.surveyResponseRepository.create({
                 storeId,
                 surveyId,
                 userID,
-                answers,
+                answers: newAnswers,
             });
         }
-
-        // const surveyResponse = this.surveyResponseRepository.create({
-        //     storeId,
-        //     surveyId,
-        //     userID,
-        //     answers: answeredData.map(answerDto => {
-        //         const answer = new Answer();
-        //         answer.questionID = answerDto.questionID;
-        //         answer.choosenValue = answerDto.choosenValue ?? '';
-        //         answer.areaId = answerDto.areaId;
-        //         answer.imagePaths = answerDto.imagePaths || [];
-        //         answer.noteText = answerDto.noteText;
-        //         return answer;
-        //     }),
-        // });
 
         return this.surveyResponseRepository.save(surveyResponse);
     }
