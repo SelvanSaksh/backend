@@ -7,7 +7,7 @@ export const databaseConfig: TypeOrmModuleOptions = {
     password: "MyStrong@123",
     database: "sakksh_dev",
     entities: [__dirname + "/../**/*.entity.{js,ts}"],
-    synchronize: true,
+    synchronize: false,
     autoLoadEntities: true,
     logging: true,
 }

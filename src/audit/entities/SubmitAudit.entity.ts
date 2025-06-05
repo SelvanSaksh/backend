@@ -1,7 +1,4 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, CreateDateColumn, UpdateDateColumn } from 'typeorm';
-import { CreateRetailerDto } from '../../Stores/dto/create.store.dto';
-import { Survey } from '../../survey/entities/Survey.entity';
-import { StoreSurvey } from '../../Stores/entities/StoreSurvey.entity';
 
 
 @Entity('survey_responses')
