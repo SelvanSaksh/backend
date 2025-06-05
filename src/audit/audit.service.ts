@@ -121,7 +121,6 @@ export class AuditService {
 
     async createSurveyResponse(dto: any): Promise<SurveyResponse> {
         const { storeId, surveyId, userID, answeredData } = dto;
-
         let surveyResponse = await this.surveyResponseRepository.findOne({
             where: { storeId, surveyId, userID },
             relations: ['answers'],
@@ -130,7 +129,7 @@ export class AuditService {
         const newAnswers = answeredData.map(answerDto => {
             const answer = new Answer();
             answer.questionID = answerDto.questionID;
-            answer.choosenValue = answerDto.choosenValue ?? '';
+            answer.choosenValue = answerDto.choosenValue ?? answerDto.choosenvalue ?? '';
             answer.areaId = answerDto.areaId;
             answer.imagePaths = answerDto.imagePaths || [];
             answer.noteText = answerDto.noteText;
@@ -139,7 +138,6 @@ export class AuditService {
 
         if (surveyResponse) {
             await this.answerRepository.remove(surveyResponse.answers);
-
             surveyResponse.answers = newAnswers;
         } else {
             surveyResponse = this.surveyResponseRepository.create({
