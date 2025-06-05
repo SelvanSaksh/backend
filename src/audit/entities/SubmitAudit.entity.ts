@@ -52,5 +52,8 @@ export class Answer {
     updatedAt: Date;
     @ManyToOne(() => SurveyResponse, surveyResponse => surveyResponse.answers)
     surveyResponse: SurveyResponse;
+
+    @Column({ type: 'boolean', default: true, nullable: true })
+    completed?: boolean;
 }
 
