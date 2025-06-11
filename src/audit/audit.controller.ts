@@ -8,6 +8,8 @@ import {
   UploadedFiles,
   HttpCode,
   HttpStatus,
+  Delete,
+  Query,
 } from '@nestjs/common';
 import { AuditService } from './audit.service';
 import { CreateAuditQuestionsDto } from './dto/create.auditQuestions.dto';
@@ -58,12 +60,40 @@ export class AuditController {
   }
 
   // Get All Survey Questions List with areas and surveys
-  @Get('getAllSurveyQuestionsList/:survey_id/:userId')
+  @Get('getAllSurveyQuestionsList/:survey_id/:store_id/:userId/:dateStr')
   getAllSurveyQuestionsList(
     @Param('survey_id') survey_id: number,
+    @Param('store_id') store_id: number,
     @Param('userId') userId: number,
+    @Param('dateStr') dateStr: number,
   ) {
-    return this.auditService.getAllSurveyQuestionsList(survey_id, userId);
+    return this.auditService.getAllSurveyQuestionsList(
+      survey_id,
+      store_id,
+      userId,
+      dateStr,
+    );
+  }
+
+  @Get('getAllSurveyList/:userId')
+  getAllSurveyList(@Param('userId') userId: number) {
+    return this.auditService.getAllSurveyList(userId);
+  }
+
+  @Delete('/deleteSurvey/:surveyId/:storeId/:userId/:dateStr')
+  async deleteSurvey(
+    @Param('surveyId') surveyId: number,
+    @Param('storeId') storeId: number,
+    @Param('userId') userId: number,
+    @Param('dateStr') dateStr: string,
+  ) {
+    await this.auditService.deleteSurveyByDetails(
+      storeId,
+      surveyId,
+      userId,
+      dateStr,
+    );
+    return { message: 'Survey deleted successfully' };
   }
 
   // upload multiple file to bucket and get the like (https)
