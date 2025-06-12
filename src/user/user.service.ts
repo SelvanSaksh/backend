@@ -99,6 +99,10 @@ export class UserService {
     }
 
 
+    async getRoles(): Promise<any> {
+        const role = this.rolesRepository.find();
+        return role
+    }
 
 
 }

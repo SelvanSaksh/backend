@@ -18,14 +18,14 @@ export class UserController {
     create(@Body() createUserDto: CreateUserDto): Promise<AdminUser> {
         return this.usersService.create(createUserDto);
     }
-    
+
     @Get()
     findAll(): Promise<AdminUser[]> {
         return this.usersService.findAll();
     }
-    
 
-    @UseGuards(AuthGuard('jwt'))    
+
+    @UseGuards(AuthGuard('jwt'))
     @Get(':id')
     findUserById(@Param('id') id: number): Promise<AdminUser> {
         return this.usersService.findOne(id);
@@ -44,8 +44,8 @@ export class UserController {
     @Get('profile')
     getProfile(@Request() req) {
         return {
-          message: 'Protected data',
-          user: req.user,
+            message: 'Protected data',
+            user: req.user,
         };
     }
 
@@ -68,4 +68,8 @@ export class UserController {
         return this.usersService.createRole(createRoleDto);
     }
 
+    @Get('get/roles')
+    getRoles(): Promise<any> {
+        return this.usersService.getRoles();
+    }
 }
