@@ -73,8 +73,8 @@ export class SalesManTracking {
     visit_type: number;
 
 
-    @Column({ type: 'decimal', precision: 12, scale: 2, nullable: true })
-    kms_covered: number;
+    @Column({ type: 'varchar', length:'55', nullable: true })
+    kms_covered: String;
 
     @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
     dist_from_comp: number;

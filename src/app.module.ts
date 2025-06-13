@@ -35,7 +35,7 @@ import { UserTrackingModule } from './user_tracking/userTracking.module';
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_DATABASE'),
         entities: [join(__dirname, '**/*.entity{.ts,.js}')],
-        synchronize: false,
+        synchronize: false  ,
         autoLoadEntities: true,
         logging: true,
       }),

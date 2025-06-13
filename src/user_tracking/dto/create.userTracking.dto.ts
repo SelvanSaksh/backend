@@ -32,7 +32,7 @@ export class CreateUserTrackingDto {
     @IsNumber()
     longitude: number;
     
-    @IsNotEmpty()
+    @IsOptional()
     @IsString()
     map_address: string;
 
@@ -94,8 +94,9 @@ export class CreateUserTrackingDto {
     visit_type?: number;
   
     @IsOptional()
-    @IsNumber({ maxDecimalPlaces: 2 })
-    kms_covered?: number;
+    @IsString()
+    // @IsNumber({ maxDecimalPlaces: 2 })
+    kms_covered?: String;
   
     @IsOptional()
     @IsNumber({ maxDecimalPlaces: 2 })
