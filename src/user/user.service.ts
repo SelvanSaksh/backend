@@ -19,7 +19,8 @@ export class UserService {
     ) { }
 
     async create(createUserDto: CreateUserDto): Promise<AdminUser> {
-        const { user_name, email, pass, user_role, name } = createUserDto;
+        const { email, pass, user_role, name , mob_num } = createUserDto;
+        console.log(createUserDto)
         const existingUser = await this.usersRepository.findOne({
             where: [{ email }],
         });
@@ -28,7 +29,8 @@ export class UserService {
         }
         const hashedPassword = await bcrypt.hash(pass, 10);
         const user = this.usersRepository.create({
-            user_name: user_name,
+            // user_name: user_name,
+            mob_num:mob_num,
             email,
             pass: hashedPassword,
             user_role: user_role,

@@ -22,8 +22,9 @@ export class UserTrackingService {
     // for day start
     async createSalesManTracking(createUserTrackingDto: CreateUserTrackingDto): Promise<SalesManTracking> {
         const address = await this.geoServices.getLoaction(createUserTrackingDto.latitude, createUserTrackingDto.longitude)
-        console.log("address",address)
+        // console.log("address",address)
 
+        // console.log(this.startOfDay ,  this.endOfDay)
         const existingDayStart = await this.salesManTrackingRepository.findOne({
             where: {
                 user_id: createUserTrackingDto.user_id,
@@ -38,9 +39,9 @@ export class UserTrackingService {
         const newDayStart = this.salesManTrackingRepository.create({
             ...createUserTrackingDto,
             map_address: address.address,
-            // city:address.groupaddress.city,
-            // state:address.groupaddress.state,
-            // pincode:address.groupaddress.pincode,
+            city:address.groupaddress.city,
+            state:address.groupaddress.state,
+            pincode:address.groupaddress.pincode,
             
             user_tracking_type: UserTrackingEnum.DAY_START,
         });
@@ -49,8 +50,9 @@ export class UserTrackingService {
 
     // for day end
     async createSalesManTrackingDayEnd(createUserTrackingDto: CreateUserTrackingDto): Promise<SalesManTracking> {
-        console.log(this.startOfDay, this.endOfDay)
+        // console.log(this.startOfDay, this.endOfDay)
         const address = await this.geoServices.getLoaction(createUserTrackingDto.latitude, createUserTrackingDto.longitude)
+        // console.log(address)
 
         const existingDayEnd = await this.salesManTrackingRepository.findOne({
             where: {
@@ -66,9 +68,9 @@ export class UserTrackingService {
         const newDayEnd = this.salesManTrackingRepository.create({
             ...createUserTrackingDto,
             map_address: address.address,
-            // city:address.groupaddress.city,
-            // state:address.groupaddress.state,
-            // pincode:address.groupaddress.pincode,
+            city:address.groupaddress.city,
+            state:address.groupaddress.state,
+            pincode:address.groupaddress.pincode,
             
             user_tracking_type: UserTrackingEnum.DAY_END,
         });
@@ -106,7 +108,7 @@ export class UserTrackingService {
         }
      
 
-        console.log("check data", this.startOfDay, this.endOfDay)
+        // console.log("check data", this.startOfDay, this.endOfDay)
         const lastCheckInDetials = await this.salesManTrackingRepository.findOne({
             where: {
                 user_id: user_id,
@@ -121,13 +123,13 @@ export class UserTrackingService {
             visitDistance = await this.geoServices.getDistance(createUserTrackingDto.latitude, createUserTrackingDto.longitude, lastCheckInDetials.latitude, lastCheckInDetials.longitude)
         }
 
-        console.log("Calculated distance", visitDistance)
+        // console.log("Calculated distance", visitDistance)
         const newCheckIn = this.salesManTrackingRepository.create({
             ...createUserTrackingDto,
             map_address: address.address,
-            // city:address.groupaddress.city,
-            // state:address.groupaddress.state,
-            // pincode:address.groupaddress.pincode,
+            city:address.groupaddress.city,
+            state:address.groupaddress.state,
+            pincode:address.groupaddress.pincode,
             kms_covered: visitDistance,
             user_tracking_type: UserTrackingEnum.CHECK_IN,
         });

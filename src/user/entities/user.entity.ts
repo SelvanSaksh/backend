@@ -66,7 +66,18 @@ export class AdminUser {
   @Column({ length: 300, nullable: true })
   selfi: string;
 
+  @Column({ type:'varchar' , length:255 , nullable:true })
+  companyName:string;
 
+  @Column({type:"varchar" , length:155 , nullable:true})
+  industryType:string
+
+
+  @Column({type:"varchar" , length:155 , nullable:true})
+  jobTitle:string
+
+  @Column({type:'varchar' , length: 55 , nullable:true})
+  companySize:string;
 
   // Relations
   @OneToMany(() => UserStore, (userStore) => userStore.user)
