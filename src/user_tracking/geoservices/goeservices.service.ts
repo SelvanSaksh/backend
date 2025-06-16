@@ -2,14 +2,10 @@ import { Injectable } from "@nestjs/common";
 
 @Injectable()
 export class GeoServices {
-
-
     async addressSeprator(fullAddress) {
         // const fullAddress = "B433, Pocket 1, Sector 14 Dwarka, Dwarka, New Delhi, Delhi, 110078, India";
-
         // Split the address by commas and trim each part
         const parts = fullAddress.split(",").map(part => part.trim());
-
         const result = {
             address: parts.slice(0, parts.length - 4).join(", "), // Everything except last 4
             city: parts[parts.length - 4],
@@ -17,13 +13,12 @@ export class GeoServices {
             pincode: parts[parts.length - 2],
             country: parts[parts.length - 1],
         };
-
         return result
-        // console.log(result);
-
+     
     }
 
     async getLoaction(lat: number, long: number) {
+       
         try {
             const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=AIzaSyDwdLC9Vp90oYz9oXNnz9SboEvuttTRBmQ`;
             const response = await fetch(url, {
@@ -33,7 +28,6 @@ export class GeoServices {
             });
 
             const data = await response.json();
-
             const formatted_address = data.results[0].formatted_address;
             if (data.status === "OK" && data.results.length > 0) {
                 return { address:formatted_address , groupaddress: await this.addressSeprator(formatted_address) };
