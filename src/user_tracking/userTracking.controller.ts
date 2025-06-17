@@ -1,6 +1,6 @@
 import { CreateUserTrackingDto } from "./dto/create.userTracking.dto";
 import { UserTrackingService } from "./userTracking.service";
-import { Controller, Post, Body, Get, Query } from "@nestjs/common";
+import { Controller, Post, Body, Get, Query, Param } from "@nestjs/common";
 import { GeoServices } from "./geoservices/goeservices.service";
 
 @Controller('user-tracking')
@@ -30,6 +30,13 @@ export class UserTrackingController {
     @Get('checkInDetails')
     getAllcheckInDetails(@Query('user_id') user_id: string) {
         return this.userTrackingService.getAllcheckInDetails(user_id);
+    }
+
+    @Get('/trackingStatusById/:userId')
+    async getTrackingStatusById(@Param('userId') userId:number)
+    {
+        return this.userTrackingService.getTrackingStatusById(userId)
+
     }
     
 

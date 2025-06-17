@@ -7,6 +7,7 @@ import { UserTrackingEnum } from "./enum/user.tracking.enum";
 import * as dayjs from "dayjs";
 import { GeoServices } from "./geoservices/goeservices.service";
 import { add } from "date-fns";
+import { start } from "repl";
 @Injectable()
 export class UserTrackingService {
     constructor(
@@ -39,10 +40,10 @@ export class UserTrackingService {
         const newDayStart = this.salesManTrackingRepository.create({
             ...createUserTrackingDto,
             map_address: address.address,
-            city:address.groupaddress.city,
-            state:address.groupaddress.state,
-            pincode:address.groupaddress.pincode,
-            
+            city: address.groupaddress.city,
+            state: address.groupaddress.state,
+            pincode: address.groupaddress.pincode,
+
             user_tracking_type: UserTrackingEnum.DAY_START,
         });
         return this.salesManTrackingRepository.save(newDayStart);
@@ -68,10 +69,10 @@ export class UserTrackingService {
         const newDayEnd = this.salesManTrackingRepository.create({
             ...createUserTrackingDto,
             map_address: address.address,
-            city:address.groupaddress.city,
-            state:address.groupaddress.state,
-            pincode:address.groupaddress.pincode,
-            
+            city: address.groupaddress.city,
+            state: address.groupaddress.state,
+            pincode: address.groupaddress.pincode,
+
             user_tracking_type: UserTrackingEnum.DAY_END,
         });
         return this.salesManTrackingRepository.save(newDayEnd);
@@ -84,7 +85,7 @@ export class UserTrackingService {
 
         const { user_id } = createUserTrackingDto;
         var visitDistance: string = '0';
-        
+
         const checkStartDay = await this.salesManTrackingRepository.findOne({
             where: {
                 user_id: user_id,
@@ -106,7 +107,7 @@ export class UserTrackingService {
         if (checkEndDay) {
             throw new NotFoundException("Day has been ended");
         }
-     
+
 
         // console.log("check data", this.startOfDay, this.endOfDay)
         const lastCheckInDetials = await this.salesManTrackingRepository.findOne({
@@ -127,15 +128,57 @@ export class UserTrackingService {
         const newCheckIn = this.salesManTrackingRepository.create({
             ...createUserTrackingDto,
             map_address: address.address,
-            city:address.groupaddress.city,
-            state:address.groupaddress.state,
-            pincode:address.groupaddress.pincode,
+            city: address.groupaddress.city,
+            state: address.groupaddress.state,
+            pincode: address.groupaddress.pincode,
             kms_covered: visitDistance,
             user_tracking_type: UserTrackingEnum.CHECK_IN,
         });
         return this.salesManTrackingRepository.save(newCheckIn);
     }
 
+    async getTrackingStatusById(id: number) {
+
+        const checkdaystartStatus = await this.salesManTrackingRepository.findOne({
+            where: {
+                user_id: id,
+                user_tracking_type: UserTrackingEnum.DAY_START,
+                date_time: Between(this.startOfDay, this.endOfDay),
+            }
+        })
+
+        const checkDayEndStatus = await this.salesManTrackingRepository.findOne({
+            where: ({
+                user_id: id,
+                user_tracking_type: UserTrackingEnum.DAY_END,
+                date_time: Between(this.startOfDay, this.endOfDay),
+            })
+        })
+
+
+        if (!checkdaystartStatus) {
+            return {}
+        }
+
+        if (!checkDayEndStatus && checkdaystartStatus) {
+            const dateTime = dayjs(checkdaystartStatus.date_time).format('YYYY-MM-DD HH:mm:ss')
+            return {
+                status: 'day_start',
+                startTime: dateTime
+            }
+        }
+        if (checkDayEndStatus && checkdaystartStatus) {
+            const startDateTime= dayjs(checkdaystartStatus.date_time).format('YYYY-MM-DD HH:mm:ss')
+            const endDateTime = dayjs(checkDayEndStatus.date_time).format('YYYY-MM-DD HH:mm:ss')
+            return {
+                status: 'day_end',
+                startTime: startDateTime,
+                endTime:endDateTime
+            }
+        }
+
+
+    }
 
 
     async getAllcheckInDetails(user_id: string): Promise<SalesManTracking[]> {
