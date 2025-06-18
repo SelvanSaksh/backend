@@ -46,6 +46,9 @@ export class SalesManTracking {
 
     @Column({ type: 'longtext', nullable: true })
     location_image: string;
+    
+    @Column({ type: 'longtext', nullable: true })
+    selfi: string;
 
     @Column({ type: 'varchar', length: 40, nullable: true })
     contact_person_name: string;

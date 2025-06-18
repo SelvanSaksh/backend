@@ -44,6 +44,9 @@ export class CreateUserTrackingDto {
     @IsOptional()
     city?:string
 
+    @IsOptional()
+@IsString()
+    selfi:string
 
     @IsString()
     @IsOptional()

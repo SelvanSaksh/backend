@@ -187,7 +187,7 @@ export class UserTrackingService {
             .leftJoin('admin_user', 'au', 'au.id = sales_man_tracking.user_id')
             .where('sales_man_tracking.user_id = :user_id', { user_id })
             .andWhere('sales_man_tracking.user_tracking_type = :user_tracking_type', { user_tracking_type: UserTrackingEnum.CHECK_IN })
-            .select(['sales_man_tracking.id as id', 'sales_man_tracking.date_time as date_time', 'sales_man_tracking.outlet_name as outlet_name', 'sales_man_tracking.contact_person_name as contact_person_name', 'sales_man_tracking.contact_person_number as contact_person_number', 'au.name as name'])
+            .select(['sales_man_tracking.id as id', 'sales_man_tracking.date_time as date_time', 'sales_man_tracking.outlet_name as outlet_name', 'sales_man_tracking.contact_person_name as contact_person_name', 'sales_man_tracking.contact_person_number as contact_person_number', 'au.name as name', 'sales_man_tracking.selfi'])
             .getRawMany<SalesManTracking>();
     }
 

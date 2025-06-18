@@ -68,8 +68,8 @@ export class UserController {
         return this.usersService.createRole(createRoleDto);
     }
 
-    @Get('get/roles')
-    getRoles(): Promise<any> {
-        return this.usersService.getRoles();
+    @Get('get/roles/:compId')
+    getRoles(@Param('compId') compId:number): Promise<any> {
+        return this.usersService.getRoles(compId);
     }
 }

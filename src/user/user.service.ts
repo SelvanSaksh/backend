@@ -101,8 +101,12 @@ export class UserService {
     }
 
 
-    async getRoles(): Promise<any> {
-        const role = this.rolesRepository.find();
+    async getRoles(compId:number): Promise<any> {
+  
+        const role = await this.rolesRepository
+        .createQueryBuilder('role')
+        .where('Role.comp_id = :compId' ,{ compId })
+        .getMany()
         return role
     }
 
