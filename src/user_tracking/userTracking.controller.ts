@@ -28,9 +28,10 @@ export class UserTrackingController {
     }
 
     @Get('checkInDetails')
-    getAllcheckInDetails(@Query('user_id') user_id: string) {
-        return this.userTrackingService.getAllcheckInDetails(user_id);
+    getAllcheckInDetails(@Query('user_id') user_id: string, @Query('date') date: string) {
+    return this.userTrackingService.getAllcheckInDetails(user_id, date);
     }
+
 
     @Get('/trackingStatusById/:userId')
     async getTrackingStatusById(@Param('userId') userId:number)

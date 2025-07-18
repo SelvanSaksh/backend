@@ -181,16 +181,45 @@ export class UserTrackingService {
     }
 
 
-    async getAllcheckInDetails(user_id: string): Promise<SalesManTracking[]> {
-        return this.salesManTrackingRepository
-            .createQueryBuilder('sales_man_tracking')
-            .leftJoin('admin_user', 'au', 'au.id = sales_man_tracking.user_id')
-            .where('sales_man_tracking.user_id = :user_id', { user_id })
-            .andWhere('sales_man_tracking.user_tracking_type = :user_tracking_type', { user_tracking_type: UserTrackingEnum.CHECK_IN })
-            .select(['sales_man_tracking.id as id', 'sales_man_tracking.date_time as date_time', 'sales_man_tracking.outlet_name as outlet_name', 'sales_man_tracking.contact_person_name as contact_person_name', 'sales_man_tracking.contact_person_number as contact_person_number', 'au.name as name', 'sales_man_tracking.selfi'])
-            .getRawMany<SalesManTracking>();
-    }
+    // async getAllcheckInDetails(user_id: string): Promise<SalesManTracking[]> {
+    //     return this.salesManTrackingRepository
+    //         .createQueryBuilder('sales_man_tracking')
+    //         .leftJoin('admin_user', 'au', 'au.id = sales_man_tracking.user_id')
+    //         .where('sales_man_tracking.user_id = :user_id', { user_id })
+    //         .andWhere('sales_man_tracking.user_tracking_type = :user_tracking_type', { user_tracking_type: UserTrackingEnum.CHECK_IN })
+    //         .select(['sales_man_tracking.id as id', 'sales_man_tracking.date_time as date_time', 'sales_man_tracking.outlet_name as outlet_name', 'sales_man_tracking.contact_person_name as contact_person_name', 'sales_man_tracking.contact_person_number as contact_person_number', 'au.name as name', 'sales_man_tracking.selfi','sales_man_tracking.kms_covered as distance'])
+    //         .getRawMany<SalesManTracking>();
+    // }
 
+   async getAllcheckInDetails(user_id: string, date: string): Promise<SalesManTracking[]> {
+    return this.salesManTrackingRepository
+        .createQueryBuilder('sales_man_tracking')
+        .leftJoin('admin_user', 'au', 'au.id = sales_man_tracking.user_id')
+        .where('sales_man_tracking.user_id = :user_id', { user_id })
+        .andWhere('sales_man_tracking.user_tracking_type = :user_tracking_type', { 
+            user_tracking_type: UserTrackingEnum.CHECK_IN 
+        })
+        .andWhere('sales_man_tracking.date_time >= :startDate AND sales_man_tracking.date_time < :endDate', { 
+            startDate: `${date} 00:00:00`,
+            endDate: `${date} 23:59:59`
+        })
+        .select([
+            'sales_man_tracking.id as id', 
+            'sales_man_tracking.date_time as date_time', 
+            'sales_man_tracking.outlet_name as outlet_name', 
+            'sales_man_tracking.contact_person_name as contact_person_name', 
+            'sales_man_tracking.contact_person_number as contact_person_number', 
+            'au.name as name', 
+            'sales_man_tracking.selfi',
+            'sales_man_tracking.kms_covered as distance',
+            'sales_man_tracking.map_address as system_location',
+            'sales_man_tracking.user_modified_address as entered_location',
+            'sales_man_tracking.location_image as uploaded_images',
+            'sales_man_tracking.notes as notes',
+            
+        ])
+        .getRawMany<SalesManTracking>();
+}
 
 
 }
